@@ -18,8 +18,18 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
     let gravity = UIGravityBehavior(items: [])
     let collision = UICollisionBehavior(items: [])
     var nbrOfFruits = 1
-    var nbrMissed = 0
     var timer: Timer!
+    
+    var score = 0
+    var lives = 3
+    var nbrMissed = 0
+    @IBOutlet var scoreLabel: UILabel!
+    @IBOutlet var lifeLabel: UILabel!
+    @IBOutlet var missedLabel: UILabel!
+    
+    enum CollisionType: String {
+        case bottom, wicker
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,7 +55,7 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         startLoop()
     
         collision.addBoundary(
-            withIdentifier: "bottom" as NSCopying,
+            withIdentifier: CollisionType.bottom.rawValue as NSCopying,
             for: UIBezierPath(rect: CGRect(
                 x: 0, y: view.bounds.maxY, width: view.bounds.maxX, height: 1
             ))
@@ -84,10 +94,39 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         return fruit
     }
     
+    func addMissed() {
+        nbrMissed += 1
+        missedLabel.text = "Missed : \(nbrMissed)"
+    }
+    
+    func handleCollision(collisionType: CollisionType, fruit: Fruit) {
+        switch collisionType {
+        case .bottom:
+            switch fruit.type {
+            case .trap:
+                ()
+            default:
+                addMissed()
+            }
+        case .wicker:
+            ()
+        }
+    }
+    
     func collisionBehavior(_ behavior: UICollisionBehavior, endedContactFor item: UIDynamicItem, withBoundaryIdentifier identifier: NSCopying?) {
-        if let id = identifier as? String, id == "bottom" {
-            nbrMissed += 1
-            
+        if let it = item as? UIView {
+            if let fruitId = it.accessibilityIdentifier,
+               let fruit = (fruits.filter{ $0.id.uuidString == fruitId }).first {
+                
+                it.removeFromSuperview()
+                collision.removeItem(item)
+                gravity.removeItem(item)
+                
+                if let collisionId = identifier as? String,
+                    let id = CollisionType(rawValue: collisionId) {
+                    handleCollision(collisionType: id, fruit: fruit)
+                }
+            }
         }
     }
 }

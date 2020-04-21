@@ -16,20 +16,19 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="Score : 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QGP-54-vHs">
-                                <rect key="frame" x="20" y="44" width="69" height="21"/>
+                                <rect key="frame" x="20" y="44" width="68.5" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" ambiguous="YES" text="Missed : 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O0u-OU-hM3">
-                                <rect key="frame" x="315" y="44" width="79" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="Missed : 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O0u-OU-hM3">
+                                <rect key="frame" x="315.5" y="44" width="78.5" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="3 Vies" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="flR-jI-y78">
-                                <rect key="frame" x="168" y="44" width="226" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3 Lives" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bAI-2t-aUr">
+                                <rect key="frame" x="179.5" y="44" width="55" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -37,12 +36,22 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="QGP-54-vHs" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Icl-AW-Egs"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="O0u-OU-hM3" secondAttribute="trailing" constant="20" id="g9s-bm-B3z"/>
-                            <constraint firstItem="QGP-54-vHs" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="rPS-AM-1x2"/>
+                            <constraint firstItem="bAI-2t-aUr" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="5jG-IW-PRA"/>
+                            <constraint firstItem="O0u-OU-hM3" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="bAI-2t-aUr" secondAttribute="trailing" id="Hup-fI-Rm0"/>
+                            <constraint firstItem="QGP-54-vHs" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="K7l-m9-fKz"/>
+                            <constraint firstItem="bAI-2t-aUr" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="QGP-54-vHs" secondAttribute="trailing" id="L3h-n4-skm"/>
+                            <constraint firstItem="QGP-54-vHs" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Rbo-Q9-6A6"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="O0u-OU-hM3" secondAttribute="trailing" constant="20" id="jMj-Im-U3u"/>
+                            <constraint firstItem="O0u-OU-hM3" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="lxg-CF-4dW"/>
+                            <constraint firstItem="bAI-2t-aUr" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="oph-eE-OMP"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="lifeLabel" destination="bAI-2t-aUr" id="nwc-II-8zK"/>
+                        <outlet property="missedLabel" destination="O0u-OU-hM3" id="pAu-8e-tKv"/>
+                        <outlet property="scoreLabel" destination="QGP-54-vHs" id="6CS-KV-pIv"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
