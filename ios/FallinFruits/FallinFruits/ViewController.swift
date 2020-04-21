@@ -14,11 +14,11 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
     var animator: UIDynamicAnimator? = nil
     var fruits = [Fruit]()
     let fruitsPerLevel = 15
-    let level = 5
+    var level = 5
     let gravity = UIGravityBehavior(items: [])
     let collision = UICollisionBehavior(items: [])
     var nbrOfFruits = 1
-    var timer: Timer!
+    var timer: Timer?
     
     var score = 0
     var lives = 3
@@ -49,10 +49,7 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         }
         
         view.backgroundColor = UIColor(patternImage: image)
-        
-        let fruit = makeFruit()
-        fruits.append(fruit)
-        startLoop()
+        timer = startLoop()
     
         collision.addBoundary(
             withIdentifier: CollisionType.bottom.rawValue as NSCopying,
@@ -64,8 +61,15 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         animator!.addBehavior(collision)
     }
     
-    func startLoop(interval: Double = 3.0, gravity: CGFloat = 0.21) {
-        timer =  Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { (timer) in
+    func startLoop() -> Timer {
+        let levelFactor = 0.04 * Double(level)
+        let fruit = makeFruit()
+        fruits.append(fruit)
+        let gravity = CGFloat(levelFactor)
+        // 4.0 for level 5, 0.24 for level 99
+        let interval = -levelFactor + 4.2
+        
+        return Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { (timer) in
             self.nbrOfFruits += 1
             self.gravity.magnitude = gravity
             let fruit = self.makeFruit()
@@ -94,9 +98,22 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         return fruit
     }
     
+    func changeLevel(to newLevel: Int) {
+        // Level between 5 and 99
+        level = min(max(5, level), 99)
+        
+        timer?.invalidate()
+        timer = startLoop()
+    }
+    
     func addMissed() {
         nbrMissed += 1
         missedLabel.text = "Missed : \(nbrMissed)"
+        if nbrMissed % level == 0 {
+            if nbrMissed % level == 0 {
+                changeLevel(to: level - 1)
+            }
+        }
     }
     
     func handleCollision(collisionType: CollisionType, fruit: Fruit) {
