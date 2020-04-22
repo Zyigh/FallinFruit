@@ -113,9 +113,7 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         nbrMissed += 1
         missedLabel.text = "Missed : \(nbrMissed)"
         if nbrMissed % level == 0 {
-            if nbrMissed % level == 0 {
-                changeLevel(to: level - 1)
-            }
+            changeLevel(to: level - 1)
         }
     }
     
@@ -134,11 +132,11 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
     }
     
     func collisionBehavior(_ behavior: UICollisionBehavior, endedContactFor item: UIDynamicItem, withBoundaryIdentifier identifier: NSCopying?) {
-        if let it = item as? UIView {
-            if let fruitId = it.accessibilityIdentifier,
+        if let itemView = item as? UIView {
+            if let fruitId = itemView.accessibilityIdentifier,
                let fruit = (fruits.filter{ $0.id.uuidString == fruitId }).first {
                 
-                it.removeFromSuperview()
+                itemView.removeFromSuperview()
                 collision.removeItem(item)
                 gravity.removeItem(item)
                 
