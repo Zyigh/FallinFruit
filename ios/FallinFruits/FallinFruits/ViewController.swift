@@ -19,7 +19,7 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
     let collision = UICollisionBehavior(items: [])
     var nbrOfFruits = 1
     var timer: Timer?
-    
+
     var score = 0
     var lives = 3
     var nbrMissed = 0
@@ -48,6 +48,9 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
             return
         }
         
+        scoreLabel.text = ""
+        lifeLabel.text = ""
+        missedLabel.text = ""
         view.backgroundColor = UIColor(patternImage: image)
         timer = startLoop()
     
