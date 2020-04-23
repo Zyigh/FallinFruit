@@ -8,9 +8,22 @@
 
 import UIKit
 
-struct EndGameError: Error {}
+enum GameError: Error {
+    case trap, gameOver
+    
+    var localizedDescription: String {
+        get {
+            switch self {
+            case .trap:
+                return "It's a trap !"
+            case .gameOver:
+                return "Game Over !"
+            }
+        }
+    }
+}
 
-class ViewController: UIViewController, UICollisionBehaviorDelegate {
+class ViewController: UIViewController {
     var animator: UIDynamicAnimator? = nil
     var fruits = [Fruit]()
     let fruitsPerLevel = 15
@@ -29,6 +42,31 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
     @IBOutlet var scoreLabel: UILabel!
     @IBOutlet var lifeLabel: UILabel!
     @IBOutlet var missedLabel: UILabel!
+    @IBOutlet var gameOver: UILabel!
+    @IBOutlet var playAgain: UIButton!
+    
+    @IBAction func playAgain(_ sender: Any?) {
+        level = 5
+        nbrOfFruits = 1
+        basket = nil
+        fruitsCaught = 0
+        score = 0
+        lives = 4
+        nbrMissed = 0
+        playAgain.isHidden = true
+        gameOver.isHidden = true
+        viewDidLoad()
+    }
+    
+    func endGame() {
+        collision.removeAllBoundaries()
+        timer?.invalidate()
+        timer = nil
+        fruits = [Fruit]()
+        basket?.removeFromSuperview()
+        playAgain.isHidden = false
+        gameOver.isHidden = false
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,7 +86,7 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         }
         
         addScore()
-        removeLife()
+        try? removeLife()
         displayMissed()
         view.backgroundColor = UIColor(patternImage: image)
         timer = startLoop()
@@ -67,7 +105,7 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
     }
     
     func startLoop() -> Timer {
-        let levelFactor = 0.04 * Double(level)
+        let levelFactor = 0.06 * Double(level)
         self.gravity.magnitude = CGFloat(levelFactor)
         let fruit = makeFruit()
         fruits.append(fruit)
@@ -143,8 +181,6 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
         // Level between 5 and 99
         level = min(max(5, newLevel), 99)
         
-        print(level)
-        
         timer?.invalidate()
         timer = startLoop()
     }
@@ -177,17 +213,22 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
             fruit.center.x < basket.frame.maxX
     }
     
-    func removeLife() {
+    func removeLife() throws {
         lives -= 1
         let t: String
-        if lives > 1 {
+        if lives == 0 {
+            lifeLabel.text = "Life : \(lives)"
+            throw GameError.gameOver
+        } else if lives > 1 {
             t = "Lives"
         } else {
             t = "Life"
         }
         lifeLabel.text = "\(t) : \(lives)"
     }
-    
+}
+
+extension ViewController: UICollisionBehaviorDelegate {
     func handleCollision(for fruitView: UIView, fruit: Fruit) {
         do {
             if isInBasket(fruitView) {
@@ -202,7 +243,11 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
                 }
             }
         } catch _ {
-            removeLife()
+            do {
+                try removeLife()
+            } catch _ {
+                endGame()
+            }
         }
     }
     
@@ -223,6 +268,11 @@ class ViewController: UIViewController, UICollisionBehaviorDelegate {
             gravity.removeItem(item)
         }
     }
+}
+
+struct Fruit {
+    let id: UUID
+    let type: FruitType
 }
 
 enum FruitType: Int {
@@ -256,14 +306,9 @@ enum FruitType: Int {
     func getScore() throws -> Int  {
         switch self {
         case .trap:
-            throw EndGameError()
+            throw GameError.trap
         default:
             return self.rawValue
         }
     }
-}
-
-struct Fruit {
-    let id: UUID
-    let type: FruitType
 }
